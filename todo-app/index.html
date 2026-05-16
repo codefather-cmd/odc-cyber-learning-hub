@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List App - Task Manager</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- PARTICLES -->
+<div id="particles"></div>
+
+<!-- CURSOR -->
+<div class="cursor"></div>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="header-content">
+        <div class="logo">
+            <i class="fas fa-tasks"></i>
+            <h1>TASK HUB</h1>
+        </div>
+        <div class="header-controls">
+            <button class="stats-btn" id="statsBtn" title="View Statistics">
+                <i class="fas fa-chart-pie"></i>
+            </button>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                ☀️
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN CONTAINER -->
+<div class="container">
+
+    <!-- INPUT SECTION -->
+    <div class="input-section">
+        <div class="input-wrapper">
+            <input 
+                type="text" 
+                class="task-input" 
+                id="taskInput" 
+                placeholder="Add a new task..."
+            >
+            <select class="priority-select" id="prioritySelect">
+                <option value="low">Low Priority</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High Priority</option>
+            </select>
+            <select class="category-select" id="categorySelect">
+                <option value="personal">Personal</option>
+                <option value="work">Work</option>
+                <option value="shopping">Shopping</option>
+                <option value="health">Health</option>
+                <option value="learning">Learning</option>
+            </select>
+            <button class="add-btn" id="addBtn">
+                <i class="fas fa-plus"></i> Add
+            </button>
+        </div>
+    </div>
+
+    <!-- FILTER SECTION -->
+    <div class="filter-section">
+        <div class="filter-controls">
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-list"></i> All
+                </button>
+                <button class="filter-btn" data-filter="active">
+                    <i class="fas fa-spinner"></i> Active
+                </button>
+                <button class="filter-btn" data-filter="completed">
+                    <i class="fas fa-check"></i> Completed
+                </button>
+            </div>
+            
+            <div class="sort-group">
+                <select class="sort-select" id="sortSelect">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="priority">High Priority</option>
+                    <option value="a-z">A - Z</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="category-tags">
+            <button class="category-tag" data-category="personal">
+                <i class="fas fa-user"></i> Personal
+            </button>
+            <button class="category-tag" data-category="work">
+                <i class="fas fa-briefcase"></i> Work
+            </button>
+            <button class="category-tag" data-category="shopping">
+                <i class="fas fa-shopping-cart"></i> Shopping
+            </button>
+            <button class="category-tag" data-category="health">
+                <i class="fas fa-heart"></i> Health
+            </button>
+            <button class="category-tag" data-category="learning">
+                <i class="fas fa-book"></i> Learning
+            </button>
+        </div>
+    </div>
+
+    <!-- TASKS LIST -->
+    <div class="tasks-section">
+        <div class="tasks-list" id="tasksList"></div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-buttons">
+        <button class="action-btn clear-btn" id="clearBtn">
+            <i class="fas fa-trash"></i> Clear Completed
+        </button>
+        <button class="action-btn export-btn" id="exportBtn">
+            <i class="fas fa-download"></i> Export Tasks
+        </button>
+        <button class="action-btn import-btn" id="importBtn">
+            <i class="fas fa-upload"></i> Import Tasks
+        </button>
+        <input type="file" id="importInput" accept=".json" style="display: none;">
+    </div>
+
+</div>
+
+<!-- STATS MODAL -->
+<div class="modal" id="statsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-chart-bar"></i> Statistics</h2>
+            <button class="close-btn" id="closeStatsBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="statsContent"></div>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal" id="editModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-edit"></i> Edit Task</h2>
+            <button class="close-btn" id="closeEditBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form class="edit-form" id="editForm">
+                <div class="form-group">
+                    <label for="editTaskText">Task Title</label>
+                    <input type="text" class="form-input" id="editTaskText" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editTaskDescription">Description</label>
+                    <textarea class="form-textarea" id="editTaskDescription" rows="3"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editTaskPriority">Priority</label>
+                        <select class="form-select" id="editTaskPriority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editTaskCategory">Category</label>
+                        <select class="form-select" id="editTaskCategory">
+                            <option value="personal">Personal</option>
+                            <option value="work">Work</option>
+                            <option value="shopping">Shopping</option>
+                            <option value="health">Health</option>
+                            <option value="learning">Learning</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editTaskDueDate">Due Date</label>
+                    <input type="date" class="form-input" id="editTaskDueDate">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('editModal').classList.remove('active')">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="script.js"></script>
+
+</body>
+</html>
